@@ -1,6 +1,7 @@
 # 🚀 ClusterForge — Multi-Environment GitOps Platform for Kubernetes
 
-A production-grade, multi-cluster GitOps platform that automates infrastructure provisioning, application deployment, scaling, and observability across environments using Terraform, EKS, and ArgoCD.
+A distributed multi-cluster Kubernetes system designed to manage multiple environments, where infrastructure provisioning, application deployment, scaling, and monitoring are fully automated using GitOps workflows, with built-in scalability and observability powered by Terraform, AWS EKS, and ArgoCD.
+
 
 ##  🥇 One-Line Over-view :
 
