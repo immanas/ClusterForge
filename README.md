@@ -39,29 +39,23 @@ clusterforge-infra/
 └── README.md # Project documentation
 ```
 
-## 🚨 Problem Statement (Real-World Context)
+# 🧩 Problem vs Solution (Real-World Production Context)
 
-| Problem Area              | Real-World Issue                                                                 | Impact                                                                 |
-|--------------------------|----------------------------------------------------------------------------------|------------------------------------------------------------------------|
-| Multi-Environment Drift  | Dev, staging, and prod environments diverge over time                           | Inconsistent deployments, hard-to-debug failures                      |
-| Manual Deployments       | Engineers deploy apps manually or via scripts                                   | Error-prone, non-reproducible releases                                |
-| Lack of Central Control  | No unified control plane across clusters                                        | Poor visibility and fragmented operations                             |
-| Scaling Challenges       | Applications don’t auto-scale efficiently                                       | Resource wastage or downtime under load                               |
-| Weak Observability       | Metrics and monitoring are not standardized                                     | Delayed incident detection and poor debugging                         |
+| 🚨 Real-World Problem | ❌ What Typically Happens in Teams | ✅ ClusterForge Solution |
+|-----------------------|-----------------------------------|--------------------------|
+| 🌍 Dev works, Prod breaks | Dev and Prod clusters are configured slightly differently; bugs appear only after release | Terraform modules create identical, reproducible dev/prod/control clusters |
+| 🔁 “Who changed this?” incidents | Engineers run `kubectl apply` manually; Git no longer reflects real cluster state | ArgoCD enforces Git as single source of truth with auto-sync + auto-prune |
+| ⏳ Traffic drops during deployment | Pods are terminated before new ones are ready; users see downtime | Rolling update strategy with readiness & liveness probes |
+| 📉 Application crashes during traffic spike | Static replica count; no autoscaling; manual intervention required | HPA dynamically adjusts replicas based on CPU metrics |
+| 🔍 Incident debugging takes hours | Teams check only `kubectl logs`; no metrics visibility | Prometheus monitoring stack provides real-time metrics and observability |
+| 🏗️ No one knows how infra was created | Click-ops in AWS console; no documentation; hard to recreate environments | Fully declarative Infrastructure as Code (Terraform) |
+| 🔐 Over-permissioned IAM roles | Static credentials and broad policies increase security risk | IAM roles with least privilege + OIDC provider integration |
+| 💥 Terraform destroy fails midway | Subnets, IGWs, NATs have hidden dependencies; cleanup becomes manual | Verified Terraform destroy with dependency resolution and teardown validation |
+| 🌐 Flat networking causes exposure | All services share same subnet; poor isolation between workloads | Multi-AZ VPC with public/private subnet isolation |
+| 📦 Dev accidentally affects Prod | Single cluster used for multiple environments | Dedicated EKS clusters per environment |
+| 📊 Monitoring added after outage | Metrics and alerting introduced only after a production incident | Monitoring integrated as a core platform layer |
+| 🔄 Cluster management chaos | Multiple clusters manually accessed and configured | Central control cluster managing environments via GitOps |
 
----
-
-##  💡 Solution Overview
-
-| Solution Component        | Approach Implemented                                                                 | Outcome                                                                 |
-|--------------------------|--------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
-| GitOps Control Plane     | Central ArgoCD cluster managing multiple environments                               | Declarative, automated deployments across clusters                      |
-| Infrastructure as Code   | Terraform used for VPC, IAM, and EKS provisioning                                   | Reproducible and version-controlled infrastructure                      |
-| Multi-Cluster Strategy   | Separate dev, prod, and control clusters                                            | Environment isolation with centralized governance                       |
-| Auto Scaling             | Horizontal Pod Autoscaler (HPA) based on CPU metrics                                | Dynamic scaling based on workload                                       |
-| Observability Stack      | Prometheus-based monitoring via Helm                                                | Real-time metrics and system visibility                                 |
-
----
 
 ##  🏗️ Architecture Diagram:
 
