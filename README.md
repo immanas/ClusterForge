@@ -7,6 +7,38 @@ A distributed multi-cluster Kubernetes system designed to manage multiple enviro
 
 **ClusterForge** is a multi-cluster Kubernetes platform that enables **declarative infrastructure + GitOps-driven application delivery** with built-in scalability and observability.
 
+## 📂 Project Structure
+
+The following represents the folder structure of the **ClusterForge infrastructure system**, organized to support reusable modules and environment-specific deployments:
+
+```
+clusterforge-infra/
+│
+├── modules/ # Reusable Terraform modules (core building blocks)
+│ ├── vpc/ # VPC, subnets, routing, NAT, IGW
+│ ├── eks/ # EKS cluster and node group provisioning
+│ └── iam/ # IAM roles, policies, OIDC setup
+│
+├── envs/ # Environment-specific configurations
+│ ├── dev/ # Development environment
+│ │ ├── main.tf
+│ │ ├── variables.tf
+│ │ └── outputs.tf
+│ │
+│ ├── prod/ # Production environment
+│ │ ├── main.tf
+│ │ ├── variables.tf
+│ │ └── outputs.tf
+│ │
+│ └── control/ # Control plane (ArgoCD cluster)
+│ ├── main.tf
+│ ├── variables.tf
+│ └── outputs.tf
+│
+├── .gitignore # Ignored files and state
+└── README.md # Project documentation
+```
+
 ## 🚨 Problem Statement (Real-World Context)
 
 | Problem Area              | Real-World Issue                                                                 | Impact                                                                 |
