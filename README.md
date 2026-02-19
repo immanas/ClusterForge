@@ -115,6 +115,41 @@ This project combines Infrastructure as Code, Kubernetes orchestration, and GitO
 ### 🛠 Tooling
 - kubectl
 
+## 📸 Infrastructure Proof
+
+### 1️⃣ Multi-Environment EKS Clusters
+
+![EKS Clusters](proof/eks-clusters.png)
+
+--- (9).jpeg
+
+### 2️⃣ Custom VPC Architecture
+Public & private subnets across multiple AZs with proper routing.
+
+![VPC Architecture](proof/vpc-architecture.png)
+
+---
+
+### 3️⃣ Worker Nodes (Managed Node Groups)
+EKS-managed EC2 instances running in private subnets.
+
+![EC2 Nodes](proof/ec2-nodes.png)
+
+---
+
+### 4️⃣ GitOps Deployment via ArgoCD
+
+![ArgoCD Sync](proof/argocd-sync.png)
+
+---
+
+### 5️⃣ Horizontal Pod Autoscaling (HPA)
+Dynamic scaling based on CPU metrics.
+
+![HPA Scaling](proof/hpa-scaling.png)
+
+---
+
 ## 🔄 Request Lifecycle:
 
 ***End-to-End Flow:***
