@@ -118,7 +118,7 @@ This project combines Infrastructure as Code, Kubernetes orchestration, and GitO
 ## 📸 Infrastructure Proof
 
 ### 1️⃣ Multi-Environment EKS Clusters
-![EKS Clusters](proof/eks-clusters.png)
+![EKS Clusters](eks-clusters.png)
 
 ---
 
