@@ -61,7 +61,7 @@ https://github.com/immanas/clusterforge-gitops
 
 ##  🏗️ Architecture Diagram:
 
-![ArgoCD Sync](proof/Architecture.png)
+![ArgoCD Sync](cla.png)
 
 ## 📈 Core Features:
 
