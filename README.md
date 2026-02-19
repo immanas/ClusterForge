@@ -2,12 +2,14 @@
 
 A distributed multi-cluster Kubernetes system designed to manage multiple environments, where infrastructure provisioning, application deployment, scaling, and monitoring are fully automated using GitOps workflows, with built-in scalability and observability powered by Terraform, AWS EKS, and ArgoCD.
 
+***This project demonstrates how real Dev, Prod, and Control environments can be managed declaratively and reproducibly.***
+
 # 🧩 Problem vs Solution (Real-World Production Context) :
 
 | 🚨 Real-World Problem | ❌ What Typically Happens in Teams | ✅ ClusterForge Solution |
 |-----------------------|-----------------------------------|--------------------------|
-| 🌍 Dev works, Prod breaks | Dev and Prod clusters are configured slightly differently; bugs appear only after release | Terraform modules create identical, reproducible dev/prod/control clusters |
-| 🔁 “Who changed this?” incidents | Engineers run `kubectl apply` manually; Git no longer reflects real cluster state | ArgoCD enforces Git as single source of truth with auto-sync + auto-prune |
+| 🌍 Dev works, Prod breaks | Dev works, Prod breaks  Manual configuration differences between clusters. | Terraform modules create identical, reproducible clusters. |
+| 🔁 “Who changed this?” incidents | ```kubectl apply``` manually Cluster state diverges from Git. | ArgoCD enforces Git as the single source of truth. |
 | ⏳ Traffic drops during deployment | Pods are terminated before new ones are ready; users see downtime | Rolling update strategy with readiness & liveness probes |
 | 📉 Application crashes during traffic spike | Static replica count; no autoscaling; manual intervention required | HPA dynamically adjusts replicas based on CPU metrics |
 | 🔍 Incident debugging takes hours | Teams check only `kubectl logs`; no metrics visibility | Prometheus monitoring stack provides real-time metrics and observability |
