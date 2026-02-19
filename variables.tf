@@ -9,3 +9,7 @@ variable "project_name" {
   type        = string
   default     = "clusterforge"
 }
+variable "environment" {
+  description = "Deployment environment (dev, prod, control)"
+  type        = string
+}
