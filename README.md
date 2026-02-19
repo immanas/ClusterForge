@@ -83,12 +83,13 @@ https://github.com/immanas/clusterforge-gitops
 |--------------------------|------------------------------|
 | Multi-Environment Kubernetes Platform — Dev, Prod, and Control clusters running on Amazon EKS | Not a single-cluster Kubernetes demo |
 | Infrastructure as Code (Terraform) — Fully provisioned VPC, IAM, and EKS using reusable modules | Not a static YAML-only deployment |
-| Centralized GitOps Control Plane — ArgoCD manages application deployments across clusters | Not a CI/CD-only showcase without real infrastructure |
+| Centralized GitOps Control Plane — ArgoCD runs in control cluster and deploys apps to dev/prod clusters | Not a CI/CD-only showcase without real infrastructure |
 | 🚀 Production-Grade Deployment — NGINX with rolling updates, probes, and health checks | Not a local Minikube experiment |
 | 📈 Auto-Scaling Enabled — Horizontal Pod Autoscaler (HPA) based on CPU metrics | Not a toy monitoring setup without scaling validation |
 | 📊 Observability Integrated — Metrics Server + Prometheus + Grafana | Not a slide-based architecture without live proof |
 | 🔐 Secure by Design — IAM roles, OIDC (IRSA), private subnets, controlled networking |  |
 | 🧱 Modular & Scalable Architecture — Designed for real-world extensibility |  |
+
 
 This project demonstrates a **real, deployable, multi-cluster cloud-native platform** — built and validated end-to-end.
 ## 🧰 Tech Stack:
@@ -98,12 +99,16 @@ This project combines Infrastructure as Code, Kubernetes orchestration, and GitO
 ### ☁ Cloud Platform
 - **AWS (ap-south-1)** – Primary cloud provider
 - **Amazon EKS** – Managed Kubernetes control plane
-- **Amazon VPC** – Custom networking (public/private subnets, NAT, IGW)
+- **Amazon VPC** – Custom networking (public/private subnets, NAT, IGW),
+- Flow:Internet → Public Subnet → NAT → Private Subnet → EKS Nodes → Pods
+  
 ### 🔐 Identity & Access (IRSA)
-IAM Roles for Service Accounts (IRSA) allows Kubernetes pods to securely access AWS services.
+IIAM Roles for Service Accounts (IRSA) allows Kubernetes pods to securely access AWS services.
 Instead of storing AWS credentials inside containers:
 - Each pod is linked to an IAM role
 - AWS verifies identity using OIDC (OpenID Connect)
+👉 Flow:
+Pod → OIDC identity → IAM Role → AWS service
 - **KMS** – Encryption at rest for cluster secrets
 - **CloudWatch** – Control plane logging
 - **S3 + DynamoDB** – Terraform remote backend & state locking
