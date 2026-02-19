@@ -2,7 +2,7 @@
 
 A distributed multi-cluster Kubernetes system designed to manage multiple environments, where infrastructure provisioning, application deployment, scaling, and monitoring are fully automated using GitOps workflows, with built-in scalability and observability powered by Terraform, AWS EKS, and ArgoCD.
 
-# 🧩 Problem vs Solution (Real-World Production Context)
+# 🧩 Problem vs Solution (Real-World Production Context) :
 
 | 🚨 Real-World Problem | ❌ What Typically Happens in Teams | ✅ ClusterForge Solution |
 |-----------------------|-----------------------------------|--------------------------|
@@ -13,15 +13,16 @@ A distributed multi-cluster Kubernetes system designed to manage multiple enviro
 | 🔍 Incident debugging takes hours | Teams check only `kubectl logs`; no metrics visibility | Prometheus monitoring stack provides real-time metrics and observability |
 | 🏗️ No one knows how infra was created | Click-ops in AWS console; no documentation; hard to recreate environments | Fully declarative Infrastructure as Code (Terraform) |
 | 🔐 Over-permissioned IAM roles | Static credentials and broad policies increase security risk | IAM roles with least privilege + OIDC provider integration |
-| 💥 Terraform destroy fails midway | Subnets, IGWs, NATs have hidden dependencies; cleanup becomes manual | Verified Terraform destroy with dependency resolution and teardown validation |
+| 💥 Terraform destroy fails midway | AWS resources have hidden dependencies (e.g., NAT → subnets → VPC); incorrect deletion order causes failures and manual cleanup | Dependencies are explicitly handled and validated, ensuring clean and complete teardown of infrastructure |
 | 🌐 Flat networking causes exposure | All services share same subnet; poor isolation between workloads | Multi-AZ VPC with public/private subnet isolation |
 | 📦 Dev accidentally affects Prod | Single cluster used for multiple environments | Dedicated EKS clusters per environment |
 | 📊 Monitoring added after outage | Metrics and alerting introduced only after a production incident | Monitoring integrated as a core platform layer |
 | 🔄 Cluster management chaos | Multiple clusters manually accessed and configured | Central control cluster managing environments via GitOps |
 
-## 📂 Project Structure
 
-The following represents the folder structure of the **ClusterForge Infrastructure Repository**, which is responsible for provisioning the VPC, IAM roles, and multi-environment EKS clusters using Terraform.
+## 📂 Project Structure:
+
+The following represents the folder structure of the **ClusterForge Infrastructure Repository**, responsible for provisioning networking, security, and multi-environment Kubernetes clusters using Terraform.
 
 ```
 clusterforge-infra/
@@ -53,11 +54,24 @@ clusterforge-infra/
 └── .gitignore      # Ignore local/terraform files
 
 ```
+### 🔗 How Modules Work Together
+
+- VPC → provides networking  
+- IAM → provides permissions  
+- EKS → uses both to create clusters  
+
+👉 Modules are separate but connected through inputs/outputs.
 
 The application deployment layer of this project — including Kubernetes manifests, ArgoCD configuration, and the multi-environment GitOps workflow — is maintained in a separate repository.
 
 🔗 **ClusterForge GitOps Repository:**  
 https://github.com/immanas/clusterforge-gitops
+
+### 📂 Repository Separation (Why two repos?)
+- clusterforge-infra → builds infrastructure  
+- clusterforge-gitops → deploys applications  
+
+👉 Infra creates the platform, GitOps manages what runs on it.
 
 ##  🏗️ Architecture Diagram:
 
@@ -85,7 +99,11 @@ This project combines Infrastructure as Code, Kubernetes orchestration, and GitO
 - **AWS (ap-south-1)** – Primary cloud provider
 - **Amazon EKS** – Managed Kubernetes control plane
 - **Amazon VPC** – Custom networking (public/private subnets, NAT, IGW)
-- **IAM + OIDC (IRSA)** – Secure workload identity
+### 🔐 Identity & Access (IRSA)
+IAM Roles for Service Accounts (IRSA) allows Kubernetes pods to securely access AWS services.
+Instead of storing AWS credentials inside containers:
+- Each pod is linked to an IAM role
+- AWS verifies identity using OIDC (OpenID Connect)
 - **KMS** – Encryption at rest for cluster secrets
 - **CloudWatch** – Control plane logging
 - **S3 + DynamoDB** – Terraform remote backend & state locking
@@ -102,9 +120,16 @@ This project combines Infrastructure as Code, Kubernetes orchestration, and GitO
 - Rolling updates & self-healing deployments
 
 ### 🔁 GitOps & Deployment
-- **ArgoCD** – Declarative multi-cluster GitOps controller
-- Environment-based deployment model (Dev / Prod)
-- Auto-sync + auto-prune enabled
+
+ArgoCD acts as the GitOps controller running inside the control cluster.
+
+Flow:
+- ArgoCD watches the GitOps repository
+- Detects changes in Kubernetes manifests
+- Connects to target clusters (dev / prod) using stored cluster credentials
+- Applies changes automatically and keeps clusters in sync with Git
+
+👉 This ensures Git is always the single source of truth for deployments
 
 ### 📦 Application Layer
 - **Docker** – Containerized Nginx application
@@ -149,14 +174,16 @@ Applications synced and healthy across dev & prod clusters.
 
 ***End-to-End Flow:***
 
-1. Infrastructure provisioned via Terraform.
-2. EKS clusters created (dev / prod / control).
-3. ArgoCD deployed in control cluster.
-4. ArgoCD connects to GitOps repo.
-5. Application manifests synced to dev & prod clusters.
-6. Kubernetes schedules pods on node groups.
-7. HPA monitors CPU metrics and scales pods dynamically.
-8. Traffic is served through Kubernetes Service.
+**Runtime Request Flow**
+1. User sends request to Kubernetes Service
+2. Service forwards traffic to one of the running Pods
+3. Pod processes the request (Nginx container)
+4. Metrics Server collects CPU usage
+5. HPA evaluates metrics:
+   - If CPU > threshold → increase replicas
+   - If CPU normal → maintain or reduce replicas
+
+👉 This creates a self-healing and auto-scaling system without manual intervention.
 
 ***Why This Design?***
 
