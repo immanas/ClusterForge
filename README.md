@@ -1,4 +1,4 @@
-# 🚀 ClusterForge — Multi-Environment GitOps Platform for Kubernetes
+# 🚀 ClusterForge — Multi-Environment GitOps Platform for Kubernetes:
 
 A distributed multi-cluster Kubernetes system designed to manage multiple environments, where infrastructure provisioning, application deployment, scaling, and monitoring are fully automated using GitOps workflows, with built-in scalability and observability powered by Terraform, AWS EKS, and ArgoCD.
 
@@ -21,7 +21,7 @@ A distributed multi-cluster Kubernetes system designed to manage multiple enviro
 
 ## 📂 Project Structure
 
-The following represents the folder structure of the **ClusterForge infrastructure system**, organized to support reusable modules and environment-specific deployments:
+The following represents the folder structure of the **ClusterForge Infrastructure Repository**, which is responsible for provisioning the VPC, IAM roles, and multi-environment EKS clusters using Terraform.
 
 ```
 clusterforge-infra/
@@ -53,6 +53,12 @@ clusterforge-infra/
 └── .gitignore      # Ignore local/terraform files
 
 ```
+
+The application deployment layer of this project — including Kubernetes manifests, ArgoCD configuration, and the multi-environment GitOps workflow — is maintained in a separate repository.
+
+🔗 **ClusterForge GitOps Repository:**  
+https://github.com/immanas/clusterforge-gitops
+
 ##  🏗️ Architecture Diagram:
 
 
