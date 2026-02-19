@@ -61,6 +61,8 @@ https://github.com/immanas/clusterforge-gitops
 
 ##  🏗️ Architecture Diagram:
 
+![ArgoCD Sync](Architecture.png)
+
 ## 📈 Core Features:
 
 | ✅ What This Project **IS** | ❌ What This Project is **NOT** |
@@ -142,11 +144,6 @@ Applications synced and healthy across dev & prod clusters.
 ![ArgoCD Sync](proof/argocd-sync.png)
 
 ---
-
-### 5️⃣ Horizontal Pod Autoscaling (HPA)
-Dynamic scaling based on CPU metrics.
-
-![HPA Scaling](proof/hpa-scaling.png)
 
 ## 🔄 Request Lifecycle:
 
