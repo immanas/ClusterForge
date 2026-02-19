@@ -118,10 +118,9 @@ This project combines Infrastructure as Code, Kubernetes orchestration, and GitO
 ## 📸 Infrastructure Proof
 
 ### 1️⃣ Multi-Environment EKS Clusters
-
 ![EKS Clusters](proof/eks-clusters.png)
 
---- (9).jpeg
+---
 
 ### 2️⃣ Custom VPC Architecture
 Public & private subnets across multiple AZs with proper routing.
@@ -138,6 +137,7 @@ EKS-managed EC2 instances running in private subnets.
 ---
 
 ### 4️⃣ GitOps Deployment via ArgoCD
+Applications synced and healthy across dev & prod clusters.
 
 ![ArgoCD Sync](proof/argocd-sync.png)
 
@@ -147,8 +147,6 @@ EKS-managed EC2 instances running in private subnets.
 Dynamic scaling based on CPU metrics.
 
 ![HPA Scaling](proof/hpa-scaling.png)
-
----
 
 ## 🔄 Request Lifecycle:
 
