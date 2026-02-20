@@ -220,13 +220,64 @@ Applications synced and healthy across dev & prod clusters.
 - Multi-AZ subnet distribution.
 - Stateless application design.
 
+## ⚡ Quickstart (30-Second Run) :
+
+> Prerequisites:
+> - EKS clusters (control, dev, prod) already provisioned via `clusterforge-infra`
+> - ArgoCD installed on the control cluster
+> - kubectl configured
+> - ArgoCD CLI installed
+
+***Switch to Control Cluster***
+```bash
+kubectl config use-context <control-cluster-context>
+```
+
+***2️⃣ Apply ArgoCD Applications***
+
+Deploy Dev and Prod applications:
+```
+kubectl apply -f environments/dev/app.yaml
+kubectl apply -f environments/prod/app.yaml
+```
+***3️⃣ Verify ArgoCD Sync***
+
+- argocd app list
+- You should see:
+```
+nginx-dev → Synced & Healthy
+nginx-prod → Synced & Healthy
+```
+***4️⃣ Validate Deployment in Target Cluster***
+
+Switch to dev or prod cluster:
+```
+kubectl config use-context <dev-cluster-context>
+kubectl get pods -n nginx-app
+kubectl get hpa -n nginx-app
+```
+You should see:
+```
+Running NGINX pods
+```
+HPA configured and active
+
 ## ⚙ Engineering Philosophy:
 
 ***Trade-offs & Decisions***
-- Chose EKS over self-managed Kubernetes for reliability.
-- Separated infra and GitOps repos for ownership clarity.
-- Used managed node groups for operational simplicity.
-- Prioritized reproducibility over manual console setup.
+
+- **Chose EKS over self-managed Kubernetes**
+  → Offloads control plane management, upgrades, and HA complexity to AWS.  
+  → Focus stays on platform design and workload reliability instead of etcd and master node operations.
+- **Separated infra and GitOps repositories**
+  → Enforces clear ownership boundaries between platform and application layers.  
+  → Reduces blast radius and aligns with real-world DevOps team structures.
+- **Used Managed Node Groups**
+  → Simplifies lifecycle management (auto-repair, scaling, upgrades).  
+  → Avoids operational overhead of maintaining custom worker AMIs and autoscaling groups.
+- **Prioritized Infrastructure as Code over manual console setup**
+  → Guarantees reproducibility and auditability.  
+  → Eliminates configuration drift and enables safe teardown/rebuild cycles.
 
 ***Explicit Limitations***
 - No production-grade ingress controller (for simplicity).
